@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "2716510990",
+    "firebase_url": "https://hna-test.firebaseio.com",
+    "project_id": "hna-test",
+    "storage_bucket": "hna-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2716510990:android:f4f4a50388c5e08a",
+        "android_client_info": {
+          "package_name": "net.ddns.ssrahul96.hna_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2716510990-7t8q8gqvbv89n39duvjbq9vdai1t1e8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB7L_aRcRziEvoIk7CntyDSGXhec6g0fQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2716510990-7t8q8gqvbv89n39duvjbq9vdai1t1e8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
