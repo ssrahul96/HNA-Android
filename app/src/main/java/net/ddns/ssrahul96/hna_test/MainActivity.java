@@ -3,8 +3,9 @@ package net.ddns.ssrahul96.hna_test;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -12,14 +13,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    TextView tw;
+    ExpandableListView expandableListView;
+    ExpandableListAdapter expandableListAdapter;
+    List<String> expandableListTitle;
+    HashMap<String, List<String>> expandableListDetail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +47,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, msg);
 
 
-        tw = (TextView) findViewById(R.id.textview);
-        tw.setText("");
-        Toast.makeText(getBaseContext(), "hello", Toast.LENGTH_SHORT).show();
-
-
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String mdate = df.format(c.getTime());
@@ -59,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        ArrayList<String> list1=new ArrayList<String>();
+        ArrayList<String> list2=new ArrayList<String>();
+        ArrayList<String> list3=new ArrayList<String>();
+        ArrayList<String> list4=new ArrayList<String>();
+
         try {
             JSONObject jo = new JSONObject(response);
             Log.i("length",""+jo.length());
@@ -74,15 +83,16 @@ public class MainActivity extends AppCompatActivity {
                 String jtime = jo1.getString("mtime");
                 String jmessage = jo1.getString("mmessage");
                 String jpath = jo1.getString("mpath");
-                tw.append("\n"+jdate);
-                tw.append("\n"+jtime);
-                tw.append("\n"+jmessage);
-                tw.append("\n"+jpath);
+                list1.add(jtime);
+                list2.add(jdate);
+                list3.add(jmessage);
+                list4.add(jpath);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String response1= "";
+/*
         try {
             response1 = new DelData().execute(url).get();
             Log.i("response 1", response1);
@@ -91,7 +101,37 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+*/
 
+        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        expandableListDetail = ExpandableListDataPump.getData(list1,list2, list3,list4);
+        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
+        expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, expandableListDetail);
+        expandableListView.setAdapter(expandableListAdapter);
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                //Toast.makeText(getApplicationContext(),expandableListTitle.get(groupPosition) + " List Expanded.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                //Toast.makeText(getApplicationContext(),expandableListTitle.get(groupPosition) + " List Collapsed.",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //Toast.makeText(getApplicationContext(),expandableListTitle.get(groupPosition)+ " -> "+ expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
 
     }
