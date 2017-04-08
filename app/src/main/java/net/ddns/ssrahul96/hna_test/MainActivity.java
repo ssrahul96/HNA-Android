@@ -1,11 +1,16 @@
 package net.ddns.ssrahul96.hna_test;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -22,17 +27,19 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    SQLiteDatabase db;
     private static final String TAG = "MainActivity";
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
     HashMap<String, List<String>> expandableListDetail;
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        CreateDb();
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Object value = getIntent().getExtras().get(key);
@@ -83,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 String jtime = jo1.getString("mtime");
                 String jmessage = jo1.getString("mmessage");
                 String jpath = jo1.getString("mpath");
+                InsertDb(jtime,jdate,jmessage,jpath);
                 list1.add(jtime);
                 list2.add(jdate);
                 list3.add(jmessage);
@@ -90,9 +98,10 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getBaseContext(),"No Data to show",Toast.LENGTH_SHORT).show();
         }
         String response1= "";
-/*
+
         try {
             response1 = new DelData().execute(url).get();
             Log.i("response 1", response1);
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-*/
+
 
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData(list1,list2, list3,list4);
@@ -133,6 +142,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private void InsertDb(String jtime, String jdate, String jmessage, String jpath) {
+        String isql="insert into record (rtime,rdate,rmessage,rpath) values('"+jtime+"','"+jdate+"','"+jmessage+"','"+jpath+"');";
+        Log.i("Insert Sql",isql);
+        db=openOrCreateDatabase("HNA.db",MODE_PRIVATE,null);
+        db.execSQL(isql);
+    }
+
+    private void CreateDb() {
+        try {
+            //db.execSQL("drop table record");
+            String csql = " create table if not exists record (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,rtime text," +
+                    "rdate text,rmessage text,rpath text)";
+            Log.i("Create Sql", csql);
+            db = openOrCreateDatabase("HNA.db", MODE_PRIVATE, null);
+            db.execSQL(csql);
+        }catch (Exception e){
+            Log.i("Exception",e.toString());
+        }
+    }
+
+    public void viewReport(View v){
+        db.close();
+        Intent i = new Intent(getBaseContext(),Report.class);
+        startActivity(i);
     }
 }
