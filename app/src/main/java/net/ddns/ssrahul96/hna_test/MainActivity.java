@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(),"No Data to show",Toast.LENGTH_SHORT).show();
         }
         String response1= "";
-
         try {
             response1 = new DelData().execute(url).get();
             Log.i("response 1", response1);
