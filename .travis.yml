@@ -1,0 +1,9 @@
+language: android
+android:
+  components:
+    - build-tools-25.0.0
+    - android-23
+    - extra-google-google_play_services
+    - addon-google_apis-google-19
+    - sys-img-armeabi-v7a-android-25
+    - sys-img-armeabi-v7a-android-23
