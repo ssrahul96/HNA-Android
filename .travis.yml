@@ -26,19 +26,9 @@ script:
 # force init of adb way before any Gradle task that uses ADB; prevents a timeout error that skips emulators of android-24
   - adb devices
 # build app and assemble APK, in debug mode
+  -chmod +x gradlew
   - ./gradlew assemble
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y python2.7
-  
-addons:
-  apt:
-    packages:
-    - python2.7
-
-
-after_success: ./scripts/travis_upload_release_to_github.py
 
 deploy:
   provider: releases
