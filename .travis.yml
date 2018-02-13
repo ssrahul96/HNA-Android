@@ -2,6 +2,10 @@ sudo: false
 language: android
 jdk:
   - oraclejdk8
+notifications:
+  email: 
+    on_success: never # default: change
+    on_failure: always # default: always
 
 # INSTRUMENTED TESTS ARE DISABLED - until Google or Travis fix the mess with emulation, only local tests are enabled
 #  - sys-img-armeabi-v7a-android-24
@@ -12,7 +16,7 @@ install:
 - yes | sdkmanager --verbose "build-tools;26.0.2"
 - yes | sdkmanager --verbose "platform-tools"
 - yes | sdkmanager --verbose "tools"
-- yes | sdkmanager --verbose "platforms;android-26"
+- yes | sdkmanager --verbose "platforms;android-25"
 - yes | sdkmanager --verbose "extras;android;m2repository"
 
 # Check tools and dependencies installed
@@ -28,14 +32,5 @@ script:
 # build app and assemble APK, in debug mode
   - chmod +x gradlew
   - ./gradlew assemble
-
-
-deploy:
-  provider: releases
-  api_key: "d07c187a44c465709346a31e56cea37fe6965981"
-  file: "app/build/outputs/apk/*"
-  skip_cleanup: true
-  on:
-    tags: true
-
-
+  - chmod +x deploy.sh
+  - ./deploy.sh
