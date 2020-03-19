@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Log and toast
         String msg = getString(R.string.msg_token_fmt, token);
+
         Log.d(TAG, msg);
 
 
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        expandableListView = findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData(list1,list2, list3,list4);
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, expandableListDetail);
